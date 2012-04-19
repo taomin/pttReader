@@ -35,10 +35,11 @@ h2 {
 	background-color: #EEEEEE;
 	position: fixed;
 	width: 100%;
+	height: 100%;
 	left: 308px;
 	max-width: 850px;
 	min-width: 600px;
-
+	padding-bottom: 50px;
 }
 
 #left-pane header {
