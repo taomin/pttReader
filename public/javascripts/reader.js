@@ -1,30 +1,49 @@
+function FBReader (FB) {
+	this.FB = FB;
+
+	//this.accessToken = null;
+	//this.userID = null;
+};
+
 (function(){
+
 	/**
-	 * first of all, load facebook JS lib
+	 * Private property declaration
 	 */
+	var _accessToken = null,
+		_userID = null,
+		_userName = null;
 
-	window.fbAsyncInit = function() {
-	    FB.init({
-	      appId      : '177950445641724', // App ID
-	      channelUrl : '//localhost:3000/files/channel.html', // Channel File
-	      status     : true, // check login status
-	      cookie     : true, // enable cookies to allow the server to access the session
-	      xfbml      : true  // parse XFBML
-	    });
+	/**
+	 * FB access initialization 
+	 * @return null
+	 */
+	FBReader.prototype.init = function () {
+		FB.login(function(response) {
+			if (response.authResponse) {
+				_accessToken = response.authResponse.accessToken;
+				_userID = response.authResponse.userID;
+		    	console.log('Welcome!  Fetching your information.... ');
+		    	
+		     	FB.api('/me', function(response) {
+		       		console.log('Good to see you, ' + response.name + '.');
+		       		_userName = response.name;
+
+		    	});
+
+		    	FB.api('/me/home', function(response){
+		    		debugger;
+
+		    	});
+		   	} else {
+		     	console.log('User cancelled login or did not fully authorize.');
+		   	}
+		},{scope: 'user_activities,user_interests,user_likes,user_status,friends_activities,friends_status,publish_actions,read_stream,offline_access'});
 	};
+})();
 
-    // Additional initialization code here
-    // 
-    // Load the SDK Asynchronously
-    (function(d){
-    	var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('head')[0];
-     	if (d.getElementById(id)) {return;}
-     	js = d.createElement('script'); js.id = id; js.async = true;
-     	js.src = "//connect.facebook.net/en_US/all.js";
-     	ref.parentNode.insertBefore(js, ref);
-   	}(document));
 
-  	//start doing other things...
+	//start doing other things...
   	/**
   	 * get ptt data from yql
 
@@ -37,5 +56,3 @@
 	});
 
 	*/
-
-})();
