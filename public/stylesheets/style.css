@@ -85,3 +85,29 @@ h2 {
 #right-pane article h1 {
 	font-family: "Microsoft Yahei", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma;
 }
+
+.fb-login-button {
+	display: inline-block;
+}
+.fb-login-caption {
+	margin-right: 5px;
+}
+.fb-login {
+	display: inline-block;
+	background-color: #666666;
+	color: #FFFFFF;
+	width: 75px;
+	height: 30px;
+	text-align: center;
+	line-height: 22px;
+	font-size: 15px;
+	font-color: white;
+	margin-left: 10px;
+	-moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+
+}
+
