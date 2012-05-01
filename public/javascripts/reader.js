@@ -30,10 +30,9 @@ function FBReader (FB) {
 		       		_userName = response.name;
 
 		    	});
-
+                
 		    	FB.api('/me/home', function(response){
-		    		debugger;
-
+                    //do something
 		    	});
 		   	} else {
 		     	console.log('User cancelled login or did not fully authorize.');
@@ -44,11 +43,12 @@ function FBReader (FB) {
 
 
 	//start doing other things...
-  	/**
+  	/*
   	 * get ptt data from yql
 
-	var yqlurl = 'http://query.yahooapis.com/v1/public/yql?q=use%20%22store%3A%2F%2FFmNpgmPDX9VzBzjdurhPfs%22%20as%20ptt%3B%20%20select%20data.items%20from%20ptt%20where%20category%3D%221%22%20and%20api_key%3D\'b7ece6539c8eab818f2ee92fe18fac6f\'%20&format=json&jsonCompat=new';
 
+    var api_key = '',
+        yqlurl = 'http://query.yahooapis.com/v1/public/yql?q=use%20%22store%3A%2F%2FFmNpgmPDX9VzBzjdurhPfs%22%20as%20ptt%3B%20select%20*%20from%20ptt%20where%20api_key%3D"' + api_key + '"%20and%20category%3D%220%22%20&jsonCompat=new';
 
 	$.get(yqlurl, function(data){
 
