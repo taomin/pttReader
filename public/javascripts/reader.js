@@ -12,32 +12,57 @@ function FBReader (FB) {
    * Private property declaration
    */
   var _accessToken = null,
-    _userID = null,
-    _userName = null;
+      _userID = null,
+      _userName = null;
 
   /**
    * FB access initialization 
    * @return null
    */
   FBReader.prototype.init = function () {
-    FB.login(function(response) {
-      if (response.authResponse) {
-        _accessToken = response.authResponse.accessToken;
-        _userID = response.authResponse.userID;
-          console.log('Welcome!  Now we are able to fetch your information.... ');
+
+    var self = this;
+    // determine whether user is already logged in or not
+    FB.getLoginStatus(function(response){
+      if (response.status === 'connected') {
+        // the user is logged in and has authenticated your
+        // app
+        self.onlogin(response);
+
+      } else {
+      
+        // the user isn't logged in to Facebook, or not authenticated your app
+        // Keep showing 'connect with facebook' button and subscribe to login event
+        FB.Event.subscribe('auth.login', self.onlogin);
+      }
+    });
+  };
+
+  FBReader.prototype.onlogin = function(response) {
+    _userID = response.authResponse.userID;
+    _accessToken = response.authResponse.accessToken;
+
+    /**
+     * hide fb login button and start doing things
+     */
+    $('.fb-login-container').css('display','none');
+    this.getTimeline();
+  };
+
+  /**
+   * Fetch information from facebook timeline 
+   */
+  FBReader.prototype.getTimeline = function () {
+
+    // FB.api('/me', function(response) {
+    //   console.log('Good to see you, ' + response.name + '.');
+    //   _userName = response.name;
+    // });
           
-          // FB.api('/me', function(response) {
-          //   console.log('Good to see you, ' + response.name + '.');
-          //   _userName = response.name;
-          // });
-                
-          // FB.api('/me/home', function(response){
-          //   //do something
-          // });
-        } else {
-          console.log('User cancelled login or did not fully authorize.');
-        }
-    },{scope: 'user_activities,user_interests,user_likes,user_status,friends_activities,friends_status,publish_actions,read_stream,offline_access'});
+    // FB.api('/me/home', function(response){
+    //   //do something
+    // });
+
   };
 })();
 

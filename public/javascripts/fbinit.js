@@ -1,6 +1,7 @@
 /**
  * first of all, load facebook JS lib
  */
+fbreader = null;
 
 window.fbAsyncInit = function() {
   FB.init({
@@ -13,16 +14,15 @@ window.fbAsyncInit = function() {
 
   // Additional initialization code here
 
-  var fbreader = new FBReader(FB);
+  fbreader = new FBReader(FB);
   fbreader.init();
 };
 
 // Load the SDK Asynchronously
-$('.fb-login').click(function(){
+(function(){
   var d=document, js, id = 'facebook-jssdk', ref = d.getElementsByTagName('head')[0];
   if (d.getElementById(id)) {return;}
   js = d.createElement('script'); js.id = id; js.async = true;
   js.src = "//connect.facebook.net/en_US/all.js";
   ref.parentNode.insertBefore(js, ref);
-  $('.fb-login-caption').css('display','none');
-});
+})();
