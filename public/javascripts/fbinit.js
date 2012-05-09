@@ -1,7 +1,6 @@
 /**
  * first of all, load facebook JS lib
  */
-fbreader = null;
 
 window.fbAsyncInit = function() {
   FB.init({
@@ -14,7 +13,7 @@ window.fbAsyncInit = function() {
 
   // Additional initialization code here
 
-  fbreader = new FBReader(FB);
+  var fbreader = new FBReader(FB);
   fbreader.init();
 };
 

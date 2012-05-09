@@ -4,6 +4,7 @@
  */
 
 var express = require('express');
+var mongoskin = require('mongoskin');
 
 var app = module.exports = express.createServer();
 
@@ -19,11 +20,26 @@ app.configure(function(){
 
 app.configure('development', function(){
   app.use(express.errorHandler()); 
+  app.set('db-uri', 'mongodb://localhost:27017/reader-test');
 });
 
 app.configure('production', function(){
   app.use(express.errorHandler()); 
+  app.set('db-uri', 'mongodb://localhost:27017/');
 });
+
+
+/**
+ * setting up connection to mongo db 
+ */
+//var readerdb = mongoskin.db('localhost:27017/reader');
+var readerdb = mongoskin.db(app.set('db-uri'));
+/*
+readerdb.collection('links').save({'link': 'http://mmdays.com'});
+readerdb.collection('links').find().toArray(function(err, items){
+    console.log(JSON.stringify(items));
+}); 
+*/
 
 // Routes
 
