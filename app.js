@@ -25,7 +25,7 @@ app.configure('development', function(){
 
 app.configure('production', function(){
   app.use(express.errorHandler()); 
-  app.set('db-uri', 'mongodb://localhost:27017/');
+  app.set('db-uri', 'mongodb://localhost:27017/reader');
 });
 
 
