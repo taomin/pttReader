@@ -37,19 +37,10 @@ app.configure('production', function(){
 var readerdb = mongoskin.db(app.set('db-uri'));
 
 dbmodel = dbmodel.init(readerdb);
-/*
-readerdb.collection('links').save({'link': 'http://mmdays.com'});
-readerdb.collection('links').find().toArray(function(err, items){
-    console.log(JSON.stringify(items));
-}); 
-*/
 
 // Routes
 
 app.get('/', function(req, res){
-
-  dbmodel.saveUser('itiachang');
-  dbmodel.saveLink('http://mmdays.com');
 
   res.render('index', {
     title: 'Express'
@@ -60,7 +51,8 @@ app.get('/', function(req, res){
 
 //   var userinfo = req.....
 //       linkinfo = ...
-//   dbmodel.save({userinfo: userinfo, linkinfo: linkinfo});
+//   dbmodel.saveUser(user);
+//   dbmodel.saveLink(link);
 
 
 //   //should render successful json response.

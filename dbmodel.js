@@ -6,7 +6,6 @@ function ReaderDao (mongoskin){
 
 ReaderDao.prototype.saveLink = function(linkinfo){
 	
-	
 	this.mongoskin.collection('links').save({'link': linkinfo});
 
 	// verify : show what we have now
