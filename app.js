@@ -3,8 +3,9 @@
  * Module dependencies.
  */
 
-var express = require('express');
-var mongoskin = require('mongoskin');
+var express = require('express'),
+    mongoskin = require('mongoskin'),
+    dbmodel = require('./dbmodel.js');
 
 var app = module.exports = express.createServer();
 
@@ -34,6 +35,8 @@ app.configure('production', function(){
  */
 //var readerdb = mongoskin.db('localhost:27017/reader');
 var readerdb = mongoskin.db(app.set('db-uri'));
+
+dbmodel = dbmodel.init(readerdb);
 /*
 readerdb.collection('links').save({'link': 'http://mmdays.com'});
 readerdb.collection('links').find().toArray(function(err, items){
@@ -44,10 +47,28 @@ readerdb.collection('links').find().toArray(function(err, items){
 // Routes
 
 app.get('/', function(req, res){
+
+  dbmodel.saveUser('itiachang');
+  dbmodel.saveLink('http://mmdays.com');
+
   res.render('index', {
     title: 'Express'
   });
 });
+
+// app.get('/saveSharedLinks', function(req, res){
+
+//   var userinfo = req.....
+//       linkinfo = ...
+//   dbmodel.save({userinfo: userinfo, linkinfo: linkinfo});
+
+
+//   //should render successful json response.
+//   res.render('json', {
+//     status: 200
+//   });
+// });
+
 
 // Only listen on $ node app.js
 
