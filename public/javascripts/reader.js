@@ -13,7 +13,8 @@ function FBReader (FB) {
    */
   var _accessToken = null,
       _userID = null,
-      _userName = null;
+      _userName = null,
+      _storylist = [];
 
   /**
    * FB access initialization 
@@ -22,6 +23,9 @@ function FBReader (FB) {
   FBReader.prototype.init = function () {
 
     var self = this;
+
+    $('.storylist').on('click', $.proxy(self.delegateStoryClick, self));
+
     // determine whether user is already logged in or not
     FB.getLoginStatus(function(response){
       if (response.status === 'connected') {
@@ -68,9 +72,11 @@ function FBReader (FB) {
         });
 
         updates = self.sortFBUpdates(updates);
+        $.merge(_storylist, updates);
 
         //update FE
         self.updateReader(updates);
+
 
         //store info in db
       }
@@ -110,11 +116,23 @@ function FBReader (FB) {
 
       var headline = update.name || update.message,
           author = update.from.name || update.caption,
-          dom = '<li><h2>' + headline + '</h2><p>' + author + '</p></li>';
+          dom = '<li data-id="' + update.id + '" data-index="' + index + '"><h2>' + headline + '</h2><p>' + author + '</p></li>';
 
       $('.storylist').append(dom);
 
     });
+  };
+
+  FBReader.prototype.delegateStoryClick = function (e) {
+    e.preventDefault();
+    var target = e.target,
+        storyDom = $(target).closest('li')[0],
+        storyIndex = storyDom.dataset.index,
+        story = _storylist[storyIndex],
+        iframeDom = '<iframe width="100%" height="100%" src="' + story.link + '"></iframe>';
+
+    $('.storypane').empty().append(iframeDom);
+
   };
 
 })();
