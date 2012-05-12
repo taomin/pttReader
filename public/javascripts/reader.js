@@ -54,16 +54,69 @@ function FBReader (FB) {
    */
   FBReader.prototype.getTimeline = function () {
 
-    // FB.api('/me', function(response) {
-    //   console.log('Good to see you, ' + response.name + '.');
-    //   _userName = response.name;
-    // });
+    var self = this;
+
+    FB.api('/me/home?limit=50', function(response) {
+      console.log('fetching timeline.');
+      var updates = [];
+
+      if (response.data) {
+        $.each(response.data, function(index, msg){
+          if (msg.type == 'link' || msg.type == 'photo') {
+            updates.push(msg);
+          };
+        });
+
+        updates = self.sortFBUpdates(updates);
+
+        //update FE
+        self.updateReader(updates);
+
+        //store info in db
+      }
+
+    });
           
     // FB.api('/me/home', function(response){
     //   //do something
     // });
 
   };
+
+  FBReader.prototype.sortFBUpdates = function (updates) {
+
+    function sortFBByActions(msg1, msg2){
+      var comment1 = (msg1.comments) ? parseInt(msg1.comments.count) : 0,
+          comment2 = (msg2.comments) ? parseInt(msg2.comments.count) : 0,
+          like1 = (msg1.likes) ? parseInt(msg1.likes.count) : 0,
+          like2 = (msg2.likes) ? parseInt(msg2.likes.count) : 0;
+
+      var diff = comment1 + like1 - comment2 - like2 ;
+
+
+      if ( diff == 0 ){
+        return 0;
+      }
+      return (diff > 0) ? -1: 1;
+    }
+
+    updates.sort(sortFBByActions);
+
+    return updates;
+  };
+
+  FBReader.prototype.updateReader = function (updates) {
+    $.each(updates, function (index, update) {
+
+      var headline = update.name || update.message,
+          author = update.from.name || update.caption,
+          dom = '<li><h2>' + headline + '</h2><p>' + author + '</p></li>';
+
+      $('.storylist').append(dom);
+
+    });
+  };
+
 })();
 
 
