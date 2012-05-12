@@ -129,7 +129,19 @@ function FBReader (FB) {
         storyDom = $(target).closest('li')[0],
         storyIndex = storyDom.dataset.index,
         story = _storylist[storyIndex],
-        iframeDom = '<iframe width="100%" height="100%" src="' + story.link + '"></iframe>';
+        src, iframeDom;
+
+    switch (story.type){
+
+      case 'photo':
+        src = story.picture;
+        break;
+      case 'link':
+      default:
+        src = story.link;
+        break;
+    }
+    iframeDom = '<iframe width="100%" height="100%" src="' + src + '"></iframe>';
 
     $('.storypane').empty().append(iframeDom);
 
