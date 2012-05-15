@@ -1,4 +1,4 @@
-/**
+  /**
  * Facebook Reader : interact with FB api, fetch your timeline updates from facebook 
  * @param Object FB : facebook javascript library instance
  */
@@ -130,7 +130,7 @@ function FBReader (FB) {
         storyDom = $(target).closest('li')[0],
         storyIndex = storyDom.dataset.index,
         story = _storylist[storyIndex],
-        src, iframeDom, iframeWidth;
+        src, iframeDom, iframeWidth, iframeHeight;
 
     switch (story.type){
 
@@ -144,8 +144,10 @@ function FBReader (FB) {
     }
 
     // have to assign iframe width because container uses flexbox and would shrink when contaisns an iframe
+    iframeWidth = $('.storypane').width();
+    iframeHeight = window.screen.height;
 
-    iframeDom = '<iframe width="' + $('.storypane').width() + 'px" height="100%" src="' + src + '"></iframe>';
+    iframeDom = '<iframe width="' + iframeWidth + 'px" height="' + iframeHeight + 'px" src="' + src + '"></iframe>';
 
     $('.storypane').empty().append(iframeDom);
 
