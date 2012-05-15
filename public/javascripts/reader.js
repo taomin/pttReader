@@ -116,6 +116,7 @@ function FBReader (FB) {
 
       var headline = update.name || update.message,
           author = update.from.name || update.caption,
+          headline = (headline.length > 50) ? headline.slice(0, 50) + '...' : headline, //simple truncation
           dom = '<li data-id="' + update.id + '" data-index="' + index + '"><h2>' + headline + '</h2><p>' + author + '</p></li>';
 
       $('.storylist').append(dom);
@@ -129,7 +130,7 @@ function FBReader (FB) {
         storyDom = $(target).closest('li')[0],
         storyIndex = storyDom.dataset.index,
         story = _storylist[storyIndex],
-        src, iframeDom;
+        src, iframeDom, iframeWidth;
 
     switch (story.type){
 
@@ -141,7 +142,10 @@ function FBReader (FB) {
         src = story.link;
         break;
     }
-    iframeDom = '<iframe width="100%" height="100%" src="' + src + '"></iframe>';
+
+    // have to assign iframe width because container uses flexbox and would shrink when contaisns an iframe
+
+    iframeDom = '<iframe width="' + $('.storypane').width() + 'px" height="100%" src="' + src + '"></iframe>';
 
     $('.storypane').empty().append(iframeDom);
 
