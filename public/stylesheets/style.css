@@ -43,7 +43,6 @@ h2 {
     max-width: 250px;
     width: 25%;
     height: 100%;
-/*    display: inline-block;*/
     background-color: #E7EBEF;
     border-right: 1px solid #AEB7BF;
     vertical-align: top;
@@ -52,17 +51,7 @@ h2 {
 
 #right-pane {
     background-color: #EEEEEE;
-/*    display: inline-block;*/
-/*    height: 100%;*/
-/*    -moz-box-flex: 1;
-    box-flex: 1;
-    -webkit-box-flex: 1;*/
-/*    width: 100%;*/
-/*    min-width: 800px;*/
-    padding-bottom: 50px;
     overflow: hidden;
-/*    position: fixed;
-    top: 8px;*/
 }
 
 #left-pane header {
@@ -117,7 +106,7 @@ h2 {
     vertical-align: top;
     display: inline-block;
 }
-.fb-login {
+.round-btn {
     display: inline-block;
     background-color: #666666;
     color: #FFFFFF;

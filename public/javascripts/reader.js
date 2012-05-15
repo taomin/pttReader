@@ -144,10 +144,10 @@ function FBReader (FB) {
     }
 
     // have to assign iframe width because container uses flexbox and would shrink when contaisns an iframe
-    iframeWidth = $('.storypane').width();
-    iframeHeight = window.screen.height;
+    // iframeWidth = $('.storypane').width();
+    iframeHeight = $(window).height() - $('#right-pane header').height() - 40;
 
-    iframeDom = '<iframe width="' + iframeWidth + 'px" height="' + iframeHeight + 'px" src="' + src + '"></iframe>';
+    iframeDom = '<iframe width="100%" height="' + iframeHeight + 'px" src="' + src + '"></iframe>';
 
     $('.storypane').empty().append(iframeDom);
 
