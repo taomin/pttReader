@@ -79,9 +79,13 @@ function FBReader (FB) {
         //update FE
         self.updateReader(updates);
 
-
         //store info in db
-
+        $.post('/saveFBTimeline',
+               {
+                userID: _userID,
+                accessToken: _accessToken,
+                timeline: updates
+               });
 
       }
 
@@ -119,9 +123,9 @@ function FBReader (FB) {
 
     $.each(updates, function (index, update) {
 
-      var headline = update.name || update.message,
+      var headline = update.name || update.message || 'No Title',
           author = update.from.name || update.caption,
-          likeCount = update.likes.count,
+          likeCount = (update.likes) ? update.likes.count : 0,
           commentCount = (update.comments) ? update.comments.count : 0,
           headline = (headline.length > 50) ? headline.slice(0, 50) + '...' : headline, //simple truncation
           dom = '<li data-id="' + update.id + '" data-index="' + index + '">'

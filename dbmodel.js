@@ -4,26 +4,28 @@ function ReaderDao (mongoskin){
 
 };
 
-ReaderDao.prototype.saveLink = function(linkinfo){
-	
-	this.mongoskin.collection('links').save({'link': linkinfo});
+ReaderDao.prototype.saveFBTimeline = function(timeline){
 
-	// verify : show what we have now
-	this.mongoskin.collection('links').find().toArray(function(err, items){
-    console.log(JSON.stringify(items));
-  });
+	var self = this;
+	timeline.map(function(message){
+		if (!message._id && message.id) {
+			message._id = message.id;
+		}
+		// console.log('save message : ', message);
+		self.mongoskin.collection('fb_timeline').save(message);
+	});
 
 };
 
 ReaderDao.prototype.saveUser = function(userinfo){
-	
-	
+
+
 	this.mongoskin.collection('users').save({'user': userinfo});
 
-	// verify : show what we have now
-	this.mongoskin.collection('users').find().toArray(function(err, items){
-    console.log(JSON.stringify(items));
-  });
+	// // verify : show what we have now
+	// this.mongoskin.collection('users').find().toArray(function(err, items){
+ //    console.log(JSON.stringify(items));
+ //  });
 
 };
 
