@@ -24,13 +24,18 @@ h2 {
     font-weight: normal;
 }
 
+.hide {
+    visibility: hidden;
+    display: none;
+}
+
 .truncate {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 }
 
-.flexbox { 
+.flexbox {
     display: -webkit-box;
     -webkit-box-orient: horizontal;
     display: -moz-box;
@@ -65,7 +70,7 @@ h2 {
     vertical-align: center;
 }
 
-#left-pane ul {
+.storylist {
     list-style-image: none;
     list-style-position: outside;
     list-style-type: none;
@@ -91,11 +96,12 @@ h2 {
     overflow-y: auto;
     display: block;
     position: relative;
-    
+
 }
 #right-pane article h1 {
     font-family: "Microsoft Yahei", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma;
 }
+
 
 .fb-login-button {
     display: inline-block;
@@ -106,6 +112,7 @@ h2 {
     vertical-align: top;
     display: inline-block;
 }
+
 .round-btn {
     display: inline-block;
     background-color: #666666;
@@ -123,5 +130,39 @@ h2 {
     border-radius: 10px;
     cursor: pointer;
 }
+.comment{
+    background-image: url("/images/fb_sprites.png");
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 13px;
+    width: 16px;
+    margin: 0 3px;
+    background-position: -119px -118px;
+}
 
+.like{
+
+    background-image: url("/images/fb_sprites.png");
+    background-position: -14px -153px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 13px;
+    width: 15px;
+    margin: 0 3px;
+
+}
+
+.storylist-icon {
+    display: inline-block;
+    height: 15px;
+}
+
+.source-icon {
+    margin: 0 3px;
+}
+
+.social-message {
+    width: 80%;
+    display: inline-block;
+}
 

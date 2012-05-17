@@ -1,5 +1,5 @@
   /**
- * Facebook Reader : interact with FB api, fetch your timeline updates from facebook 
+ * Facebook Reader : interact with FB api, fetch your timeline updates from facebook
  * @param Object FB : facebook javascript library instance
  */
 function FBReader (FB) {
@@ -17,7 +17,7 @@ function FBReader (FB) {
       _storylist = [];
 
   /**
-   * FB access initialization 
+   * FB access initialization
    * @return null
    */
   FBReader.prototype.init = function () {
@@ -34,7 +34,7 @@ function FBReader (FB) {
         self.onlogin(response);
 
       } else {
-      
+
         // the user isn't logged in to Facebook, or not authenticated your app
         // Keep showing 'connect with facebook' button and subscribe to login event
         FB.Event.subscribe('auth.login', self.onlogin);
@@ -50,11 +50,13 @@ function FBReader (FB) {
      * hide fb login button and start doing things
      */
     $('.fb-login-container').css('display','none');
+    var storyListHeight = $(window).height() - $('#left-pane header').height() - 40;
+    $('.storylist').css('height', storyListHeight).css('overflow-y','scroll');
     this.getTimeline();
   };
 
   /**
-   * Fetch information from facebook timeline 
+   * Fetch information from facebook timeline
    */
   FBReader.prototype.getTimeline = function () {
 
@@ -79,10 +81,12 @@ function FBReader (FB) {
 
 
         //store info in db
+
+
       }
 
     });
-          
+
     // FB.api('/me/home', function(response){
     //   //do something
     // });
@@ -112,16 +116,25 @@ function FBReader (FB) {
   };
 
   FBReader.prototype.updateReader = function (updates) {
+
     $.each(updates, function (index, update) {
 
       var headline = update.name || update.message,
           author = update.from.name || update.caption,
+          likeCount = update.likes.count,
+          commentCount = (update.comments) ? update.comments.count : 0,
           headline = (headline.length > 50) ? headline.slice(0, 50) + '...' : headline, //simple truncation
-          dom = '<li data-id="' + update.id + '" data-index="' + index + '"><h2>' + headline + '</h2><p>' + author + '</p></li>';
+          dom = '<li data-id="' + update.id + '" data-index="' + index + '">'
+              + '<h2>' + headline + '</h2>'
+              + '<span class="storylist-icon"><i class="like"></i>' + likeCount + '</span>'
+              + '<span class="storylist-icon"><i class="comment"></i>' + commentCount + '</span>'
+              + '<p><img class="source-icon icon" src="' + update.icon + '"></image></icon>' + author + '</p></li>';
 
       $('.storylist').append(dom);
 
     });
+
+
   };
 
   FBReader.prototype.delegateStoryClick = function (e) {
@@ -130,7 +143,7 @@ function FBReader (FB) {
         storyDom = $(target).closest('li')[0],
         storyIndex = storyDom.dataset.index,
         story = _storylist[storyIndex],
-        src, iframeDom, iframeWidth, iframeHeight;
+        src, iframeDom, iframeHeight, messageDom;
 
     switch (story.type){
 
@@ -145,12 +158,12 @@ function FBReader (FB) {
 
     // have to assign iframe width because container uses flexbox and would shrink when contaisns an iframe
     // iframeWidth = $('.storypane').width();
-    iframeHeight = $(window).height() - $('#right-pane header').height() - 40;
-
+    iframeHeight = $(window).height() - $('#right-pane header').height() - 50;
     iframeDom = '<iframe width="100%" height="' + iframeHeight + 'px" src="' + src + '"></iframe>';
+    messageDom = '<span class="truncate social-message">' + story.from.name + ' : ' + story.message + '</span>';
 
     $('.storypane').empty().append(iframeDom);
-
+    $('.fb-action-container').removeClass('hide').empty().append(messageDom);
   };
 
 })();
