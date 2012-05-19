@@ -37,7 +37,7 @@ function FBReader (FB) {
 
         // the user isn't logged in to Facebook, or not authenticated your app
         // Keep showing 'connect with facebook' button and subscribe to login event
-        FB.Event.subscribe('auth.login', self.onlogin);
+        FB.Event.subscribe('auth.login', $.proxy(self.onlogin, self));
       }
     });
   };
