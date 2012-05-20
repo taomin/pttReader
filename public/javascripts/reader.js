@@ -63,7 +63,7 @@ function FBReader (FB) {
     var self = this;
 
     FB.api('/me/home?limit=50', function(response) {
-      console.log('fetching timeline.');
+      // console.log('fetching timeline.');
       var updates = [];
 
       if (response.data) {
@@ -80,15 +80,12 @@ function FBReader (FB) {
         self.updateReader(updates);
 
         //store info in db
-        $.post('/saveFBTimeline',
-               {
+        $.post('/saveFBTimeline',{
                 userID: _userID,
                 accessToken: _accessToken,
                 timeline: updates
                });
-
       }
-
     });
 
     // FB.api('/me/home', function(response){

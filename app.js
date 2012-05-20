@@ -4,7 +4,6 @@
  */
 
 var express = require('express'),
-    mongoskin = require('mongoskin'),
     dbmodel = require('./dbmodel.js');
 
 var app = module.exports = express.createServer();
@@ -32,9 +31,8 @@ app.configure('production', function(){
 /**
  * setting up connection to mongo db
  */
-var readerdb = mongoskin.db(app.set('db-uri'));
 
-dbmodel = dbmodel.init(readerdb);
+dbmodel = dbmodel.init(app.set('db-uri'));
 
 // Routes
 
@@ -51,7 +49,7 @@ app.post('/saveFBTimeline', function(req, res){
       timeline = req.body.timeline;
 
   // dbmodel.saveUser(user);
-  dbmodel.saveFBTimeline(timeline);
+  dbmodel.saveFBTimeline(timeline, userID, accessToken);
 
   //should render successful json response.
   res.send('OK', 200);
