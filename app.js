@@ -45,15 +45,22 @@ app.get('/', function(req, res){
 app.post('/saveFBTimeline', function(req, res){
 
   var userID = req.body.userID,
-      accessToken = req.body.accessToken,
       timeline = req.body.timeline;
 
   // dbmodel.saveUser(user);
-  dbmodel.saveFBTimeline(timeline, userID, accessToken);
+  dbmodel.saveFBTimeline(timeline, userID);
 
   //should render successful json response.
   res.send('OK', 200);
 });
+
+app.post('/saveUserInfo', function(req, res){
+  var accessToken = req.body.accessToken,
+      userInfo = req.body.userInfo;
+
+  dbmodel.saveUserInfo(userInfo, accessToken);
+  res.send('OK', 200);
+})
 
 
 // Only listen on $ node app.js

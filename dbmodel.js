@@ -1,4 +1,9 @@
-var mongoskin = require('mongoskin');
+var mongoskin = require('mongoskin'),
+	request = require('request'),
+	context = {
+		appId : '177950445641724',
+		appSecret : '03f6cd1caf768e0a2660b582719334e8'
+	};
 
 function ReaderDao (dburi){
 
@@ -6,7 +11,7 @@ function ReaderDao (dburi){
 
 };
 
-ReaderDao.prototype.saveFBTimeline = function(timeline, userID, accessToken){
+ReaderDao.prototype.saveFBTimeline = function(timeline, userID){
 
 	var self = this;
 	timeline.forEach(function(message){
@@ -16,7 +21,7 @@ ReaderDao.prototype.saveFBTimeline = function(timeline, userID, accessToken){
 
 		message.isRaw = true,
 		message.userID = userID,
-		message.accessToken = accessToken;
+
 		//convert created_time and updated_time to timestamp
 		message.created_time = new Date(message.created_time);
 		message.updated_time = new Date(message.updated_time);
@@ -25,27 +30,39 @@ ReaderDao.prototype.saveFBTimeline = function(timeline, userID, accessToken){
 
 };
 
-ReaderDao.prototype.saveUser = function(userinfo){
+ReaderDao.prototype.saveUserInfo = function(userInfo, accessToken){
 
+	var self = this,
+		currentDate = new Date();
+	if (!userInfo._id && userInfo.id) {
+		userInfo._id = userInfo.id;
+	}
 
-	this.db.collection('users').save({'user': userinfo});
+	self.getLongLivedToken(accessToken, function(error, response){
 
-	// // verify : show what we have now
-	// this.mongoskin.collection('users').find().toArray(function(err, items){
- //    console.log(JSON.stringify(items));
- //  });
+		if (!error && response){
+
+			userInfo.accessToken = response.access_token;
+			userInfo.tokenExpiration = new Date(currentDate.getTime()
+												+ parseInt(response.expires) * 1000);
+			self.db.collection('users').save(userInfo);
+		}
+		else {
+			console.log('failed to get long lived token for ', userInfo.username);
+		}
+	});
 
 };
 
 
 /**
  * Update user's longlive token
- * @param  {String} userID      user who needs update accessToken
  * @param  {String} accessToken old access token
  * @param  {Function}           callback function when FB api call returns.
  *                              function params: new access token and new expiration time. Will return null when renew fails.
  */
-ReaderDao.prototype.getLongLivedToken = function(userID, accessToken, callback){
+ReaderDao.prototype.getLongLivedToken = function(accessToken, callback){
+
 	var	url = 'https://graph.facebook.com/oauth/access_token?'
 			  + 'client_id=' + context.appId
 			  + '&client_secret=' + context.appSecret
@@ -63,25 +80,32 @@ ReaderDao.prototype.getLongLivedToken = function(userID, accessToken, callback){
 		    	config[kvpairs[0]] = kvpairs[1];
 		    });
 
-		    // console.log('return config :', config);
 		    callback(null, config);
 		}
 		else {
-			console.log('get error when updating user token. Keep using old one. User:', userID);
-			console.log('error message : ', body);
+			console.log('get error when updating accessToken: ', accessToken);
+			console.log('error message received : ', body);
 			callback(true);
 		}
 	});
 };
 
+/**
+ * Get any FB user info
+ * @param  {String}   userID      user that your want to fetch information
+ * @param  {String}   accessToken token used for authentication
+ * @param  {Function} callback
+ */
 ReaderDao.prototype.getUserInfo = function(userID, accessToken, callback){
+
 	var url = 'https://graph.facebook.com/' + userID + '?access_token=' + accessToken;
 	request.get(url, function(err, response, body){
-		// console.log('url ', url);
-		// console.log('body', body);
+
 		if (!err && response.statusCode == 200) {
 			var user = JSON.parse(body);
-			user._id = user.id;
+			if (!user._id && user.id){
+				user._id = user.id;
+			}
 			// console.log('user is ' + JSON.stringify(user));
 		    callback(null, user);
 		}
