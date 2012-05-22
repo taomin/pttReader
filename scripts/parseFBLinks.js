@@ -2,13 +2,10 @@ var mongoskin = require('mongoskin'),
 	request = require('request'),
 	Step = require('step'),
 	dbmodel = require('../dbmodel.js'),
+	context = require('../env.js').getContext('development');
 
 	// need to figure out how batch script switch between dev/prod. maybe a config file.
-	context = {
-		dburi : 'mongodb://localhost:27017/reader-test',
-		appId : '177950445641724',
-		appSecret : '03f6cd1caf768e0a2660b582719334e8'
-	};
+
 context.mongodb = mongoskin.db(context.dburi);
 dbmodel = dbmodel.init(context.dburi);
 

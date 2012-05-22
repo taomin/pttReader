@@ -1,9 +1,6 @@
 var mongoskin = require('mongoskin'),
 	request = require('request'),
-	context = {
-		appId : '177950445641724',
-		appSecret : '03f6cd1caf768e0a2660b582719334e8'
-	};
+	context = require('./env.js').getContext('development');
 
 function ReaderDao (dburi){
 
