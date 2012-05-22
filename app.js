@@ -60,8 +60,11 @@ app.post('/saveUserInfo', function(req, res){
 
   dbmodel.saveUserInfo(userInfo, accessToken);
   res.send('OK', 200);
-})
+});
 
+process.on('uncaughtException', function (e) {
+    console.log(e, 'error happened');
+});
 
 // Only listen on $ node app.js
 
