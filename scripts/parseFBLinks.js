@@ -147,10 +147,12 @@ function getLongUrl(shorturl, callback){
 			}
 
 			if (cachedUrl && cachedUrl.longurl){
-				return {
-								cached: true,
-								longurl: cachedUrl.longurl
-							};
+
+				var mockAjaxReq = function (callback){
+					callback(null, null, {cached: true, longurl: cachedUrl.longurl});
+				}
+				mockAjaxReq(this);
+
 			} else {
 				var url = 'http://expandurl.appspot.com/expand?url=' + encodeURIComponent(shorturl);
 				console.log('talk with expand url ', url);
@@ -161,9 +163,9 @@ function getLongUrl(shorturl, callback){
 			if (err){
 				throw err;
 			}
-			if (response.cached){
+			if (body.cached){
 				// console.log('long url : found cache');
-				longurl = response.longurl;
+				longurl = body.longurl;
 			}
 			else {
 				longurlInfo = JSON.parse(body);
