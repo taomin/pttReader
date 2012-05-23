@@ -3,9 +3,7 @@ var mongoskin = require('mongoskin'),
 	context = require('./env.js').getContext('development');
 
 function ReaderDao (dburi){
-
 	this.db = mongoskin.db(dburi);
-
 };
 
 ReaderDao.prototype.saveFBTimeline = function(timeline, userID){
