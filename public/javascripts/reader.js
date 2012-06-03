@@ -24,7 +24,7 @@ function FBReader (FB) {
 
     var self = this;
 
-    $('.storylist').on('click', $.proxy(self.delegateStoryClick, self));
+    $('.storylist').delegate('li', 'click', self.delegateStoryClick);
 
     // determine whether user is already logged in or not
     FB.getLoginStatus(function(response){
@@ -98,6 +98,11 @@ function FBReader (FB) {
 
   };
 
+  /**
+   * Sorting facebook timeline updates by its sum of comment/likes
+   * @param  {Array} updates Facebook Timeline updates
+   * @return {Array}         Sorted result
+   */
   FBReader.prototype.sortFBUpdates = function (updates) {
 
     function sortFBByActions(msg1, msg2){
@@ -129,7 +134,7 @@ function FBReader (FB) {
           likeCount = (update.likes) ? update.likes.count : 0,
           commentCount = (update.comments) ? update.comments.count : 0,
           headline = (headline.length > 50) ? headline.slice(0, 50) + '...' : headline, //simple truncation
-          dom = '<li data-id="' + update.id + '" data-index="' + index + '">'
+          dom = '<li cliass="story-summary" data-id="' + update.id + '" data-index="' + index + '">'
               + '<h2>' + headline + '</h2>'
               + '<span class="storylist-icon"><i class="like"></i>' + likeCount + '</span>'
               + '<span class="storylist-icon"><i class="comment"></i>' + commentCount + '</span>'
@@ -139,16 +144,20 @@ function FBReader (FB) {
 
     });
 
-
   };
 
+  /**
+   * Event delegation: Handle click event on the story summary at left panel.
+   * context : the story dom
+   * @param  {Object} e event
+   */
   FBReader.prototype.delegateStoryClick = function (e) {
     e.preventDefault();
     var target = e.target,
-        storyDom = $(target).closest('li')[0],
+        storyDom = this,
         storyIndex = storyDom.dataset.index,
         story = _storylist[storyIndex],
-        src, iframeDom, iframeHeight, messageDom;
+        src, iframeHeight, message;
 
     switch (story.type){
 
@@ -164,11 +173,12 @@ function FBReader (FB) {
     // have to assign iframe width because container uses flexbox and would shrink when contaisns an iframe
     // iframeWidth = $('.storypane').width();
     iframeHeight = $(window).height() - $('#right-pane header').height() - 50;
-    iframeDom = '<iframe width="100%" height="' + iframeHeight + 'px" src="' + src + '"></iframe>';
-    messageDom = '<span class="truncate social-message">' + story.from.name + ' : ' + story.message + '</span>';
+    message =  story.from.name + ' : ' + story.message;
 
-    $('.storypane').empty().append(iframeDom);
-    $('.fb-action-container').removeClass('hide').empty().append(messageDom);
+    //$('.storypane').empty().append(iframeDom);
+    $('.article-iframe').height(iframeHeight).attr('src', src).removeClass('hide');
+    $('.social-message').text(message);
+    $('.fb-action-container').removeClass('hide');
   };
 
 })();
