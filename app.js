@@ -4,7 +4,8 @@
  */
 
 var express = require('express'),
-    dbmodel = require('./dbmodel.js');
+    dbmodel = require('./dbmodel.js'),
+    textExtractor = require('./textExtractor');
 
 var app = module.exports = express.createServer();
 
@@ -39,6 +40,20 @@ dbmodel = dbmodel.init(app.set('db-uri'));
 app.get('/', function(req, res){
   res.render('index', {
     title: 'Express'
+  });
+});
+
+app.get('/getExtractedText', function(req, res){
+  var url = req.body.url;
+
+console.log('url is ', url);
+
+  textExtractor.extractFromUrl(url, function(err, stdout){
+    if (err) {
+      res.send('Url extractor failure',400);
+    } else {
+      res.send(stdout, 200);
+    }
   });
 });
 

@@ -25,6 +25,7 @@ function FBReader (FB) {
     var self = this;
 
     $('.storylist').delegate('li', 'click', self.delegateStoryClick);
+    $('#readerify').click($.proxy(self.readerifyClick, self));
 
     // determine whether user is already logged in or not
     FB.getLoginStatus(function(response){
@@ -77,7 +78,7 @@ function FBReader (FB) {
 
       if (response.data) {
         $.each(response.data, function(index, msg){
-          if (msg.type == 'link' || msg.type == 'photo') {
+          if (msg.type == 'link') { // ignore everything other than a link
             updates.push(msg);
           };
         });
@@ -161,9 +162,6 @@ function FBReader (FB) {
 
     switch (story.type){
 
-      case 'photo':
-        src = story.picture;
-        break;
       case 'link':
       default:
         src = story.link;
@@ -179,6 +177,20 @@ function FBReader (FB) {
     $('.article-iframe').height(iframeHeight).attr('src', src).removeClass('hide');
     $('.social-message').text(message);
     $('.fb-action-container').removeClass('hide');
+  };
+
+  /**
+   * Event handler for "readerify" click event
+   * @param  {Object} e Event Object
+   */
+  FBReader.prototype.readerifyClick = function (e) {
+    var articleUrl = $('.article-iframe').attr('src');
+
+    $.get('/getExtractedText',{
+        url: articleUrl
+      }, function (data){
+        alert(data);
+      });
   };
 
 })();
